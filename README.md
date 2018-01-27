@@ -4,7 +4,6 @@ Quick and dirty firestore source for Gatsby. Allows you to query your firestore 
 
 Based on Ryan Florence's [gatsby-source-firebase](https://github.com/ReactTraining/gatsby-source-firebase)
 
-![screenshot](./screenshot.png)
 
 ## Usage
 
