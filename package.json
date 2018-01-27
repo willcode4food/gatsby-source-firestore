@@ -1,21 +1,21 @@
 {
-  "name": "gatsby-source-firebase",
+  "name": "gatsby-source-firestore",
   "version": "1.0.0",
-  "description": "Gatsby plugin to turn Firebase into a Gatsby data source.",
+  "description": "Gatsby plugin to turn Firestore into a Gatsby data source.",
   "license": "MIT",
   "keywords": [
     "gatsby",
     "gatsby-plugin",
     "firebase"
   ],
-  "author": "Ryan Florence <rpflorence@gmail.com>",
+  "author": "Marc Arbesman <marbesman@gmail.com>",
   "files": [
     "gatsby-node.js",
     "README.md"
   ],
-  "repository": "ReactTraining/gatsby-source-firebase",
+  "repository": "willcode4food/gatsby-source-firebase",
   "main": "gatsby-node.js",
   "dependencies": {
-    "firebase-admin": "^5.2.1"
+    "firebase-admin": "^5.4.0"
   }
 }

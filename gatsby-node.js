@@ -1,61 +1,62 @@
-const firebase = require("firebase-admin")
+const admin = require("firebase-admin")
 const crypto = require("crypto")
 
-exports.sourceNodes = (
+exports.sourceNodes = async (
   { boundActionCreators },
   { credential, databaseURL, types, quiet = false },
   done
 ) => {
   const { createNode } = boundActionCreators
 
-  firebase.initializeApp({
-    credential: firebase.credential.cert(credential),
+  admin.initializeApp({
+    credential: admin.credential.cert(credential),
     databaseURL: databaseURL
   })
 
-  const db = firebase.database()
+  const db = admin.firestore()
 
   const start = Date.now()
 
   types.forEach(
-    ({ query = ref => ref, map = node => node, type, path }) => {
-      if (!quiet) {
-        console.log(`\n[Firebase Source] Fetching data for ${type}...`)
+    ({ query = ref => ref, map = node => node, collection, path }) => {
+      try {
+        const querySnapshot = await query(db.collection(collection).get())
       }
-
-      query(db.ref(path)).once("value", snapshot => {
-        if (!quiet) {
-          console.log(
-            `\n[Firebase Source] Data for ${type} loaded in`,
+      catch(error) {
+        throw new Error(`Database Error: ${error}`)
+      }
+      
+      if(!querySnapshot.empty) {
+        console.log(
+            `\n[Firestore Source] Data for ${collection} loaded in`,
             Date.now() - start,
             "ms"
           )
-        }
+      }
+      const docs = querySnapshot.docs()
+      for(val of docs){
+            Object.keys(val).forEach(key => {
+            const node = map(Object.assign({}, val[key]))
 
-        const val = snapshot.val()
+            const contentDigest = crypto
+              .createHash(`md5`)
+              .update(JSON.stringify(node))
+              .digest(`hex`)
 
-        Object.keys(val).forEach(key => {
-          const node = map(Object.assign({}, val[key]))
-
-          const contentDigest = crypto
-            .createHash(`md5`)
-            .update(JSON.stringify(node))
-            .digest(`hex`)
-
-          createNode(
-            Object.assign(node, {
-              id: key,
-              parent: "root",
-              children: [],
-              internal: {
-                type: type,
-                contentDigest: contentDigest
-              }
-            })
-          )
-        })
-        done()
-      })
+            createNode(
+              Object.assign(node, {
+                id: key,
+                parent: "root",
+                children: [],
+                internal: {
+                  collection: collection,
+                  contentDigest: contentDigest
+                }
+              })
+            )
+          })
+          done()
+      }
     },
     error => {
       throw new Error(error)
