@@ -36,19 +36,19 @@ exports.sourceNodes = async (
             .createHash(`md5`)
             .update(JSON.stringify(node))
             .digest(`hex`)
-
-          createNode(
-            Object.assign(node, {
-              id: key,
-              parent: "root",
-              children: [],
-              internal: {
-                type: type,
-                contentDigest: contentDigest
-              }
-            })
-          )
-        })
+            
+            createNode(
+                Object.assign(node, {
+                  id: key,
+                  parent: "root",
+                  children: [],
+                  internal: {
+                    collection,
+                    contentDigest
+                  }
+                })
+              )
+          })
         }
 
         done()
