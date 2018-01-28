@@ -6,7 +6,8 @@
   "keywords": [
     "gatsby",
     "gatsby-plugin",
-    "firebase"
+    "firebase",
+    "firestore"
   ],
   "author": "Marc Arbesman <marbesman@gmail.com>",
   "files": [
@@ -16,6 +17,6 @@
   "repository": "willcode4food/gatsby-source-firebase",
   "main": "gatsby-node.js",
   "dependencies": {
-    "firebase-admin": "^5.4.0"
+    "firebase-admin": "^5.8.1"
   }
 }
