@@ -29,8 +29,8 @@ exports.sourceNodes = async (
             "ms"
         )
         const docs = querySnapshot.docs()
-
-        Object.keys(val).forEach(key => {
+        for (let docs of docs) {
+          Object.keys(val).forEach(key => {
           const node = map(Object.assign({}, val[key]))
           const contentDigest = crypto
             .createHash(`md5`)
@@ -49,6 +49,8 @@ exports.sourceNodes = async (
             })
           )
         })
+        }
+
         done()
       }
     }
