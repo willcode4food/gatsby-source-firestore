@@ -76,7 +76,7 @@ module.exports = {
           // if your data is really simple, this should be fine too
           {
             type: "CourseDescriptions",
-            path: "text/courseDescriptions",
+            collection: "courseDescriptions",
           }
         ]
       }
