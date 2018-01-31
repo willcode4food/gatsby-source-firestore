@@ -1,7 +1,6 @@
 const admin = require("firebase-admin")
 const crypto = require("crypto")
 
-
 exports.sourceNodes = async (
   { boundActionCreators },
   { credential, databaseURL, types, quiet = false },
@@ -29,9 +28,9 @@ exports.sourceNodes = async (
             "ms"
         )
         const docs = querySnapshot.docs()
-        for (let val of docs) {
-          Object.keys(val).forEach(key => {
-          const node = map(Object.assign({}, val[key]))
+        for (let doc of docs) {
+          const val = { id:doc.id, ...doc.data() }
+          const node = map(Object.assign({}, val))
           const contentDigest = crypto
             .createHash(`md5`)
             .update(JSON.stringify(node))
@@ -39,23 +38,23 @@ exports.sourceNodes = async (
             
             createNode(
                 Object.assign(node, {
-                  id: key,
+                  id: val.id,
                   parent: "root",
                   children: [],
                   internal: {
-                    collection,
+                    type: `Firestore${collection}`,
                     contentDigest
                   }
                 })
               )
-          })
         }
 
         done()
       }
     }
     catch(error) {
-      throw new Error(error)
+      console.log(error)
+      process.exit(1)
     }
   }
 }

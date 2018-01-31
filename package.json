@@ -18,5 +18,8 @@
   "main": "gatsby-node.js",
   "dependencies": {
     "firebase-admin": "^5.8.1"
+  },
+  "devDependencies": {
+    "jest": "^22.1.4"
   }
 }
