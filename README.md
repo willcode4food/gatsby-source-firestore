@@ -43,8 +43,11 @@ module.exports = {
         // you can have multiple "types" that point to different paths
         types: [
           {
-            // this collection will become `allWorkshop` in graphql
-            collection: "Workshop",
+            // this type will become `allWorkshop` in graphql
+            collection: "Dispensaries",
+
+            // the path to get the records from
+            // path: "v2/data/workshops",
 
             // probably don't want your entire database, use the query option
             // to limit however you'd like
@@ -58,25 +61,19 @@ module.exports = {
             // 3. Remove stuff you don't need.
             //
             // Feel free to mutate, we sent you a copy anyway.
-            map: node => {
-              // fix keys graphql hates
-              node.nineteenEightyFive = node['1985']
-              delete node['1985']
+            // map: node => {
+            //   // fix keys graphql hates
+            //   node.nineteenEightyFive = node['1985']
+            //   delete node['1985']
 
-              // convert a child list to an array:
-              return node.sessions = Object.keys(node.sessions).map(key => {
-                return { _key: key, session: node.sessions[key] }
-              })
+            //   // convert a child list to an array:
+            //   return node.sessions = Object.keys(node.sessions).map(key => {
+            //     return { _key: key, session: node.sessions[key] }
+            //   })
 
-              // finally, return the node
-              return node
-            },
-          },
-
-          // if your data is really simple, this should be fine too
-          {
-            type: "CourseDescriptions",
-            collection: "courseDescriptions",
+            //   // finally, return the node
+            //   return node
+            // },
           }
         ]
       }
