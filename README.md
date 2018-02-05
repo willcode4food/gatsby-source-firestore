@@ -45,7 +45,8 @@ module.exports = {
         types: [
           {
             // this type will become `allAuthors` in graphql
-            collection: "Authors",,
+            type: 'Authors'
+            collection: "all-authors",
 
             // probably don't want your entire database, use the query option
             // to limit however you'd like
