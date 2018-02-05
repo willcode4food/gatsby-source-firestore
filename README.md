@@ -20,6 +20,7 @@ Based on Ryan Florence's [gatsby-source-firebase](https://github.com/ReactTraini
   credential,
   databaseURL,
   types: [{
+    type,
     collection,
     query,
     map
@@ -43,11 +44,8 @@ module.exports = {
         // you can have multiple "types" that point to different paths
         types: [
           {
-            // this type will become `allWorkshop` in graphql
-            collection: "Dispensaries",
-
-            // the path to get the records from
-            // path: "v2/data/workshops",
+            // this type will become `allAuthors` in graphql
+            collection: "Authors",,
 
             // probably don't want your entire database, use the query option
             // to limit however you'd like
@@ -61,19 +59,23 @@ module.exports = {
             // 3. Remove stuff you don't need.
             //
             // Feel free to mutate, we sent you a copy anyway.
-            // map: node => {
-            //   // fix keys graphql hates
-            //   node.nineteenEightyFive = node['1985']
-            //   delete node['1985']
-
-            //   // convert a child list to an array:
-            //   return node.sessions = Object.keys(node.sessions).map(key => {
-            //     return { _key: key, session: node.sessions[key] }
-            //   })
-
-            //   // finally, return the node
-            //   return node
-            // },
+            map: async node => {
+              let books = []
+              const db = admin.firestore()
+              if(node.hasOwnProperty('books')){ // not all records in the database have a list of books
+                const authorBooks = Object.keys(node.books) // grab book IDs from firsestore list see https://firebase.google.com/docs/firestore/solutions/arrays?authuser=0
+                for(const key of authorBooks) {
+                  const querySnapshot = await db.collection('books').doc(key).get() // query firestore 
+                  if (!querySnapshot.empty) {
+                    const { name, slug } = querySnapshot.data()
+                    books.push({ _key: key, name, slug })
+                  }
+                }
+                delete node['books'] // remove old books key, will replace with format better for gatsby graphql
+              }
+                // finally, return the node
+                return {...node, books}
+            },
           }
         ]
       }
