@@ -86,4 +86,3 @@ module.exports = {
 ```
 
 Enjoy!
-test
